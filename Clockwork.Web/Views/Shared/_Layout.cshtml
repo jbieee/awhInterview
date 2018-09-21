@@ -3,8 +3,17 @@
 <head>
     <title>@ViewBag.Title</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" />
+
+    <style>
+    </style>
 </head>
 <body>
-	@RenderBody()
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand">AWH Clockwork Project @ViewData["Version"] on @ViewData["Runtime"]!</span>
+    </nav>
+    <main class="container-fluid">
+        @RenderBody()
+    </main>
 </body>
 </html>

@@ -3,19 +3,28 @@ function UserAction() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("output").innerHTML = this.responseText;
+            var para = document.createElement("p"),
+                node = document.createTextNode(this.responseText);
+
+            para.appendChild(node);
+
+            var element = document.getElementById("queried-times");
+            element.appendChild(para);
         }
     };
     xhttp.open("GET", "http://127.0.0.1:5000/api/currenttime", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
-
 }
 </script>
 
-<h2>AWH Clockwork Project @ViewData["Version"] on @ViewData["Runtime"]!</h2>
+<div class="row">
+    <div class="col">
+        <h2>Time Queries Tracker</h2>
+        <button class="btn btn-primary" type="submit" onclick="UserAction()">Get the time</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col" id="queried-times"></div>
+</div>
 
-
-<button type="submit" onclick="UserAction()">Get the time</button>
-
-<p id="output"></p>
