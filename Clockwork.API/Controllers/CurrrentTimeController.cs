@@ -1,41 +1,56 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Clockwork.API.Models;
+using System.Threading;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Clockwork.API.Controllers
 {
     [Route("api/[controller]")]
     public class CurrentTimeController : Controller
     {
-        // GET api/currenttime
+        private readonly ClockworkContext _clockworkContext;
+
+        public CurrentTimeController(ClockworkContext clockworkContext)
+        {
+            _clockworkContext = clockworkContext;
+        }
+
+        // Get api/currenttime
         [HttpGet]
-        public IActionResult Get()
+        public async Task<OkObjectResult> Get(CancellationToken token)
+        {
+            var queriedTimes = await _clockworkContext.CurrentTimeQueries.ToListAsync(token);
+            return Ok(queriedTimes);
+        }
+
+        // Post api/currenttime
+        [HttpPost]
+        public OkResult Post()
         {
             var utcTime = DateTime.UtcNow;
             var serverTime = DateTime.Now;
             var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            var returnVal = new CurrentTimeQuery
+            var queriedTime = new CurrentTimeQuery
             {
                 UTCTime = utcTime,
                 ClientIp = ip,
                 Time = serverTime
             };
 
-            using (var db = new ClockworkContext())
-            {
-                db.CurrentTimeQueries.Add(returnVal);
-                var count = db.SaveChanges();
-                Console.WriteLine("{0} records saved to database", count);
+            _clockworkContext.CurrentTimeQueries.Add(queriedTime);
+            var count = _clockworkContext.SaveChanges();
+            Console.WriteLine("{0} records saved to database", count);
 
-                Console.WriteLine();
-                foreach (var CurrentTimeQuery in db.CurrentTimeQueries)
-                {
-                    Console.WriteLine(" - {0}", CurrentTimeQuery.UTCTime);
-                }
+            Console.WriteLine();
+            foreach (var CurrentTimeQuery in _clockworkContext.CurrentTimeQueries)
+            {
+                Console.WriteLine(" - {0}", CurrentTimeQuery.UTCTime);
             }
 
-            return Ok(returnVal);
+            return Ok();
         }
     }
 }
