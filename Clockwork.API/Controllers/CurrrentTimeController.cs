@@ -4,6 +4,7 @@ using Clockwork.API.Models;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Clockwork.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace Clockwork.API.Controllers
         [HttpGet]
         public async Task<OkObjectResult> Get(CancellationToken token)
         {
-            var queriedTimes = await _clockworkContext.CurrentTimeQueries.ToListAsync(token);
+            var queriedTimes = await _clockworkContext.CurrentTimeQueries.OrderByDescending(t => t.CurrentTimeQueryId).ToListAsync(token);
             return Ok(queriedTimes);
         }
 

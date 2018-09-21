@@ -1,12 +1,15 @@
 ﻿<div class="row">
     <div class="col">
         <h2>Time Queries Tracker</h2>
-        <button class="btn btn-primary" type="submit" onclick="clockwork.addCurrentTime">Get the time</button>
+        <button class="btn btn-primary" id="get-time" type="submit">Get the time</button>
     </div>
 </div>
 
 <div class="row">
-    <div class="col" id="queried-times"></div>
+    <div class="container">
+        <div class="row" id="queried-times">
+        </div>
+    </div>
 </div>
 
 <script src="~/Content/scripts/clockwork.js"></script>
