@@ -16,6 +16,15 @@ namespace Clockwork.Web.Controllers
 
             ViewData["Version"] = mvcName.Version.Major + "." + mvcName.Version.Minor;
             ViewData["Runtime"] = isMono ? "Mono" : ".NET";
+            ViewData["TimeZones"] = TimeZoneInfo.GetSystemTimeZones()
+                .Select(timeZoneInfo => 
+                    new SelectListItem
+                    {
+                        Text = timeZoneInfo.DisplayName,
+                        Value = timeZoneInfo.Id,
+                        Selected = timeZoneInfo.Equals(TimeZoneInfo.Local)
+                    }
+                ).ToList();
 
             return View();
         }

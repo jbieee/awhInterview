@@ -11,9 +11,10 @@ using System;
 namespace Clockwork.API.Migrations
 {
     [DbContext(typeof(ClockworkContext))]
-    partial class ClockworkContextModelSnapshot : ModelSnapshot
+    [Migration("20180921201358_AddTimeZoneInfoId")]
+    partial class AddTimeZoneInfoId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

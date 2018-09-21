@@ -4,17 +4,18 @@
         document.getElementById("get-time").onclick = clockwork.addCurrentTime;
     },
     addCurrentTime: function () {
-        var xhttp = new XMLHttpRequest();
+        var xhttp = new XMLHttpRequest(),
+            selectedTimeZone = document.getElementById("timezone-id").value;
         xhttp.onload = function () {
             if (this.readyState === 4 && this.status === 200) {
-                console.log("Current time successfully added.");
                 clockwork.getAllQueriedTimes();
             } else {
                 alert("There was an error");
             }
         };
         xhttp.open("POST", "http://127.0.0.1:5000/api/currenttime", true);
-        xhttp.send();
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.send(JSON.stringify(selectedTimeZone));
     },
     getAllQueriedTimes: function () {
         var xhttp = new XMLHttpRequest();
@@ -49,13 +50,23 @@
         para.appendChild(node);
         div.appendChild(para);
 
-        para = document.createElement("p");
-        node = document.createTextNode("Time: " + (new Date(queriedTime.time)).toLocaleString());
+        para = document.createElement("strong");
+        node = document.createTextNode(queriedTime.timeZoneId);
         para.appendChild(node);
         div.appendChild(para);
 
         para = document.createElement("p");
-        node = document.createTextNode("Time(UTC): " + (new Date(queriedTime.utcTime)).toLocaleString());
+        node = document.createTextNode((new Date(queriedTime.time)).toLocaleString());
+        para.appendChild(node);
+        div.appendChild(para);
+
+        para = document.createElement("strong");
+        node = document.createTextNode("Greenwich Mean Time");
+        para.appendChild(node);
+        div.appendChild(para);
+
+        para = document.createElement("p");
+        node = document.createTextNode((new Date(queriedTime.utcTime)).toLocaleString());
         para.appendChild(node);
         div.appendChild(para);
 

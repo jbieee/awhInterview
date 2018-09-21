@@ -26,10 +26,20 @@ namespace Clockwork.Web.Tests.Controllers
 
             var expectedVersion = mvcName.Version.Major + "." + mvcName.Version.Minor;
             var expectedRuntime = isMono ? "Mono" : ".NET";
+            var expectedTimeZones = TimeZoneInfo.GetSystemTimeZones()
+                .Select(timeZoneInfo =>
+                    new SelectListItem
+                    {
+                        Text = timeZoneInfo.DisplayName,
+                        Value = timeZoneInfo.Id,
+                        Selected = timeZoneInfo.Equals(TimeZoneInfo.Local)
+                    }
+                ).ToList();
 
             // Assert
             Assert.AreEqual(expectedVersion, result.ViewData["Version"]);
             Assert.AreEqual(expectedRuntime, result.ViewData["Runtime"]);
+            Assert.AreEqual(expectedTimeZones, result.ViewData["TimeZones"]);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using TimeZoneConverter;
 
 namespace Clockwork.API.Controllers
 {
@@ -28,17 +29,18 @@ namespace Clockwork.API.Controllers
 
         // Post api/currenttime
         [HttpPost]
-        public OkResult Post()
+        public OkResult Post([FromBody]string timeZoneId)
         {
             var utcTime = DateTime.UtcNow;
-            var serverTime = DateTime.Now;
+            var requestedTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, TZConvert.GetTimeZoneInfo(timeZoneId));
             var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
 
             var queriedTime = new CurrentTimeQuery
             {
                 UTCTime = utcTime,
                 ClientIp = ip,
-                Time = serverTime
+                Time = requestedTime,
+                TimeZoneId = timeZoneId
             };
 
             _clockworkContext.CurrentTimeQueries.Add(queriedTime);
